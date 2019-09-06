@@ -1,0 +1,40 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: sample-code-pull
+spec:
+  selector:
+    matchLabels:
+      app: gitclone
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: gitclone
+    spec:
+      initContainers:
+      - name: builder
+        image: builder
+        env:
+        - name: DOCKER_HOST
+          value: tcp://dind:2375
+        - name: repository
+          value: 
+        - name: tag
+          value: test          
+        - name: dockerfilepath
+          value: ""     
+        - name: dockerpath
+          value: ""   
+        imagePullPolicy: Never
+        securityContext:
+          privileged: true       
+      containers:
+      - name: test
+        image: test
+        imagePullPolicy: Never  
+
+
+
+
+
